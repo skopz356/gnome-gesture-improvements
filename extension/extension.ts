@@ -5,13 +5,12 @@ import * as Constants from './constants';
 import { AltTabConstants, ExtSettings, TouchpadConstants } from './constants';
 import { AltTabGestureExtension } from './src/altTab';
 import { ForwardBackGestureExtension } from './src/forwardBack';
-import { GestureExtension } from './src/gestures';
-import { OverviewRoundTripGestureExtension } from './src/overviewRoundTrip';
 import { CloseWindowExtension } from './src/pinchGestures/closeWindow';
 import { ShowDesktopExtension } from './src/pinchGestures/showDesktop';
 import { SnapWindowExtension } from './src/snapWindow';
 import * as DBusUtils from './src/utils/dbus';
 import * as VKeyboard from './src/utils/keyboard';
+import { MoveWindowExtension } from './src/moveWindow';
 
 const ExtensionUtils = imports.misc.extensionUtils;
 
@@ -77,16 +76,17 @@ class Extension {
 
 		if (this.settings.get_boolean('enable-alttab-gesture'))
 			this._extensions.push(new AltTabGestureExtension());
-		
+
 		if (this.settings.get_boolean('enable-forward-back-gesture')) {
 			const appForwardBackKeyBinds = this.settings.get_value('forward-back-application-keyboard-shortcuts').deepUnpack();
 			this._extensions.push(new ForwardBackGestureExtension(appForwardBackKeyBinds));
 		}
+		this._extensions.push(new MoveWindowExtension());
 
-		this._extensions.push(
+		/*this._extensions.push(
 			new OverviewRoundTripGestureExtension(this.settings.get_enum('overview-navifation-states')),
 			new GestureExtension(),
-		);
+		);*/
 
 		if (this.settings.get_boolean('enable-window-manipulation-gesture'))
 			this._extensions.push(new SnapWindowExtension());
